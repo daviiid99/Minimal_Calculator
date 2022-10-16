@@ -253,7 +253,7 @@ public class Main extends javax.swing.JFrame {
         BTheme.setBackground(new java.awt.Color(0, 0, 0));
         BTheme.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         BTheme.setForeground(new java.awt.Color(255, 255, 255));
-        BTheme.setText("Switch Theme");
+        BTheme.setText("Dark Theme");
         BTheme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BThemeActionPerformed(evt);
@@ -701,7 +701,14 @@ public void readInput(){
                         
                     } else if(this.remaining.get(i).equals("÷")){
                         result = divNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
+                        if (this.preview.getText().equals("Forbidden operation :(")){
+                            i = this.remaining.size();
+                            j = this.symbols.length;
+                            this.Previous.setText("You can't divide by 0");
+                        } else{
+                            
                         this.preview.setText(String.valueOf(result));
+                        }
                         
                     }
                     
@@ -721,7 +728,14 @@ public void readInput(){
                         
                     } else if(this.remaining.get(i).equals("÷")){
                         result = divNumber(result,Double.valueOf(this.remaining.get(i + 1)) );
+                        if (this.preview.getText().equals("Forbidden operation :(")){
+                            i = this.remaining.size();
+                            j = this.symbols.length;
+                            this.Previous.setText("You can't divide by 0");
+                        } else{
+                            
                         this.preview.setText(String.valueOf(result));
+                        }
                         
                     }
                     
@@ -737,7 +751,7 @@ public void readInput(){
     // Display last operation on preview
     this.backup_operation = this.previous_operation; //This helps to recover previous operation
     this.previous_operation += "=" + String.valueOf(result);
-    this.Previous.setText(this.previous_operation);
+    if (!this.preview.getText().equals(("Forbidden operation :("))) this.Previous.setText(this.previous_operation);
     
 }
 
@@ -783,10 +797,9 @@ public double multiNumber(double number1, double number2){
 public double divNumber(double number1, double number2){
     double resultado = 0;
     
-    if (number1 == 0 || number2 == 0){
-        if (number1 == 0 && number2 != 0) resultado = number2;
-        if (number2 == 0 && number1 != 0) resultado = number1;
-        this.preview.setText("Operation not allowed :(");
+    if (number2 == 0){
+        this.preview.setText("Forbidden operation :(");
+        
     } else {
         resultado = number1/number2;
     }
@@ -854,6 +867,8 @@ public void setTheme(){
         // Disable dark mode
         this.isDark = false;
         
+        this.BTheme.setText("Dark Theme");
+        
     } else {
         // Set panel background to black
         this.background.setBackground(Color.black);
@@ -898,6 +913,7 @@ public void setTheme(){
         
         // Enable dark mode
         this.isDark = true;
+        this.BTheme.setText("Light Theme");
         
     }
 }

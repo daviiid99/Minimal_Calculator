@@ -17,6 +17,8 @@ public class Main extends javax.swing.JFrame {
     String[] numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."};
     String[] symbols = {"x","+", "-", "÷"};
     boolean isDark = false;
+    boolean isPreviousSymbol = false;
+    String previousSymbol = "";
     ArrayList<Integer> results  = new ArrayList<Integer>();
     ArrayList<String> remaining  = new ArrayList<String>();
     String temp = "";
@@ -591,6 +593,7 @@ public void typeNumber(javax.swing.JButton button){
     if (esEntero){
         addNumberToPreview(button);
         this.temp += button.getText();
+        this.previousSymbol = "";
         
     }
     
@@ -600,28 +603,74 @@ public void typeNumber(javax.swing.JButton button){
         
         if(button.getText().equals("x")){
             this.temp = "x";
-            addNumberToPreview(button);
-            this.remaining.add(this.temp);
-            this.temp = "";
+            //checkPreviousEntry();
             
+            if (isPreviousSymbol){
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                this.remaining.set(this.remaining.size() -1 , this.temp);
+                this.previousSymbol = "";
+            } else{
+                
+                this.remaining.add(this.temp);
+                this.previousSymbol = "x";
+                addNumberToPreview(button);
+                this.temp = "";   
+            }
+            
+               
         }
         if(button.getText().equals("+")){
             this.temp = "+";
-            addNumberToPreview(button);
-            this.remaining.add(this.temp);
-            this.temp = "";
+            //checkPreviousEntry();
+            
+            if (this.isPreviousSymbol){
+                this.preview.setText(this.preview.getText().length() - 1 + "+" );
+                this.remaining.set(this.remaining.size() - 1, "+");
+                this.previousSymbol = "";
+            } else{
+                
+                this.remaining.add(this.temp);
+                this.previousSymbol = "+";
+                addNumberToPreview(button);
+                this.temp = "";   
+            }
+            
+            
+            
         }
         if(button.getText().equals("-")) {
             this.temp = "-";
-            addNumberToPreview(button);
-            this.remaining.add(this.temp);
-            this.temp = "";
+            //checkPreviousEntry();
+            
+            if (this.isPreviousSymbol){
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                this.remaining.set(this.remaining.size() -1 , "-");
+            } else{
+                
+                this.remaining.add(this.temp);
+                this.previousSymbol = "-";
+                addNumberToPreview(button);
+                this.temp = "";   
+            }
+            
+            
         }
         if(button.getText().equals("÷")) {
             this.temp = "÷";
-            addNumberToPreview(button);
-            this.remaining.add(this.temp);
-            this.temp = "";
+            //checkPreviousEntry();
+            
+            if (this.isPreviousSymbol){
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                this.remaining.set(this.remaining.size() - 1, "÷");
+            } else{
+                
+                this.remaining.add(this.temp);
+                this.previousSymbol = "÷";
+                addNumberToPreview(button);
+                this.temp = "";   
+            }
+            
+              
         }
         
         if (button.getText().equals("AC")){
@@ -671,6 +720,16 @@ public void typeNumber(javax.swing.JButton button){
         
         
         
+    }
+}
+
+public void checkPreviousEntry(){
+    int index = (this.remaining.size() - 1);
+    if (this.previousSymbol.equals("+")|| this.previousSymbol.equals("-") || this.previousSymbol.equals("x") || this.previousSymbol.equals("÷") ){
+        this.isPreviousSymbol = true;
+
+    } else{
+        this.isPreviousSymbol = false;
     }
 }
 

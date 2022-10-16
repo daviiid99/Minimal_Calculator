@@ -14,13 +14,14 @@ import java.util.Arrays;
  */
 public class Main extends javax.swing.JFrame {
     String[] operation;
-    String[] numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    String[] numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."};
     String[] symbols = {"x","+", "-", "÷"};
     boolean isDark = false;
     ArrayList<Integer> results  = new ArrayList<Integer>();
     ArrayList<String> remaining  = new ArrayList<String>();
     String temp = "";
     String previous_operation = "";
+    String backup_operation = "";
     
     /**
      * Creates new form Main
@@ -61,6 +62,8 @@ public class Main extends javax.swing.JFrame {
         BTheme = new javax.swing.JButton();
         Previous = new javax.swing.JLabel();
         BDel = new javax.swing.JButton();
+        B10 = new javax.swing.JButton();
+        BRestore = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -247,9 +250,9 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        BTheme.setBackground(new java.awt.Color(255, 255, 255));
+        BTheme.setBackground(new java.awt.Color(0, 0, 0));
         BTheme.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        BTheme.setForeground(new java.awt.Color(0, 0, 0));
+        BTheme.setForeground(new java.awt.Color(255, 255, 255));
         BTheme.setText("Switch Theme");
         BTheme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -259,13 +262,33 @@ public class Main extends javax.swing.JFrame {
 
         Previous.setForeground(new java.awt.Color(0, 0, 0));
 
-        BDel.setBackground(new java.awt.Color(255, 204, 153));
+        BDel.setBackground(new java.awt.Color(255, 255, 0));
         BDel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         BDel.setForeground(new java.awt.Color(0, 0, 0));
         BDel.setText("del");
         BDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BDelActionPerformed(evt);
+            }
+        });
+
+        B10.setBackground(new java.awt.Color(255, 255, 255));
+        B10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        B10.setForeground(new java.awt.Color(0, 0, 0));
+        B10.setText(".");
+        B10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B10ActionPerformed(evt);
+            }
+        });
+
+        BRestore.setBackground(new java.awt.Color(255, 204, 51));
+        BRestore.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        BRestore.setForeground(new java.awt.Color(0, 0, 0));
+        BRestore.setText("restore");
+        BRestore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BRestoreActionPerformed(evt);
             }
         });
 
@@ -285,10 +308,13 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(Previous, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(preview))
                         .addContainerGap(15, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
+                    .addGroup(backgroundLayout.createSequentialGroup()
                         .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(backgroundLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(BAC, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(BRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(BDel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(separator, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundLayout.createSequentialGroup()
@@ -304,7 +330,7 @@ public class Main extends javax.swing.JFrame {
                                     .addGroup(backgroundLayout.createSequentialGroup()
                                         .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(B1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(BAC, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(B10, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(28, 28, 28)
                                         .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(B0, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,12 +357,15 @@ public class Main extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(Previous, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(preview, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(BDel)
+                .addComponent(preview, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BDel)
+                    .addComponent(BRestore)
+                    .addComponent(BAC))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(B7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(B8, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -356,11 +385,11 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(BMin, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BSum, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BEquals, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(B10, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(B0, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BAC, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(938, Short.MAX_VALUE))
+                    .addComponent(BEquals, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BSum, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(939, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -473,6 +502,16 @@ public class Main extends javax.swing.JFrame {
         typeNumber(BDel);
     }//GEN-LAST:event_BDelActionPerformed
 
+    private void B10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B10ActionPerformed
+        // TODO add your handling code here:
+        typeNumber(B10);
+    }//GEN-LAST:event_B10ActionPerformed
+
+    private void BRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BRestoreActionPerformed
+        // TODO add your handling code here:
+        typeNumber(BRestore);
+    }//GEN-LAST:event_BRestoreActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -511,6 +550,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton B0;
     private javax.swing.JButton B1;
+    private javax.swing.JButton B10;
     private javax.swing.JButton B2;
     private javax.swing.JButton B3;
     private javax.swing.JButton B4;
@@ -525,6 +565,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton BEquals;
     private javax.swing.JButton BMin;
     private javax.swing.JButton BMult;
+    private javax.swing.JButton BRestore;
     private javax.swing.JButton BSum;
     private javax.swing.JButton BTheme;
     private javax.swing.JLabel Previous;
@@ -595,6 +636,10 @@ public void typeNumber(javax.swing.JButton button){
             } else {
                 if (this.preview.getText().length() >= 1){
                     this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                    this.remaining = new ArrayList<String>();
+                    this.temp = "";  
+                    recoverPrevious();
+                    
                     if(this.preview.getText().length() == 0){
                         this.preview.setText("Enter your operation :)");
                     }
@@ -605,7 +650,19 @@ public void typeNumber(javax.swing.JButton button){
                 
             }
             
+            
+            
         }
+        
+        if (button.getText().equals("restore")){
+            this.preview.setText(this.backup_operation);
+            this.Previous.setText("");
+            this.previous_operation = "";
+            this.remaining = new ArrayList<String>();
+            this.temp = "";  
+            recoverPrevious();
+        }
+        
         if(button.getText().equals("=")){
             this.temp = "";
             readInput() ;
@@ -620,7 +677,7 @@ public void typeNumber(javax.swing.JButton button){
 public void readInput(){
      // This function will assign the current input text into a variable
      
-    int result = 0;
+    double result = 0;
     this.previous_operation = "";
     this.Previous.setText("");
     
@@ -632,18 +689,18 @@ public void readInput(){
             if (this.remaining.get(i).equals(this.symbols[j])){
                 if(result == 0){
                     if(this.remaining.get(i).equals("+")) {
-                        result = sumNumber(Integer.valueOf(this.remaining.get(i - 1)), Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = sumNumber(Double.valueOf(this.remaining.get(i - 1)), Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                     } else if (this.remaining.get(i).equals("-")){
-                        result = minusNumber(Integer.valueOf(this.remaining.get(i - 1)),Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = minusNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     } else if (this.remaining.get(i).equals("x")){
-                        result = multiNumber(Integer.valueOf(this.remaining.get(i - 1)),Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = multiNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     } else if(this.remaining.get(i).equals("÷")){
-                        result = divNumber(Integer.valueOf(this.remaining.get(i - 1)),Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = divNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     }
@@ -651,19 +708,19 @@ public void readInput(){
                     
                 } else {
                     if(this.remaining.get(i).equals("+")) {
-                        result = sumNumber(result, Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = sumNumber(result, Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     } else if (this.remaining.get(i).equals("-")){
-                        result = minusNumber(result, Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = minusNumber(result, Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     } else if (this.remaining.get(i).equals("x")){
-                        result = multiNumber(result,Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = multiNumber(result,Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     } else if(this.remaining.get(i).equals("÷")){
-                        result = divNumber(result,Integer.valueOf(this.remaining.get(i + 1)) );
+                        result = divNumber(result,Double.valueOf(this.remaining.get(i + 1)) );
                         this.preview.setText(String.valueOf(result));
                         
                     }
@@ -678,26 +735,53 @@ public void readInput(){
     }
     
     // Display last operation on preview
+    this.backup_operation = this.previous_operation; //This helps to recover previous operation
     this.previous_operation += "=" + String.valueOf(result);
     this.Previous.setText(this.previous_operation);
     
 }
 
-public int sumNumber(int number1, int number2){
+public void recoverPrevious(){
+    boolean esNumero = false;
+    String res = "";
+    
+    
+    for (int i = 0; i < this.preview.getText().length(); i++){
+            res = String.valueOf(this.preview.getText().charAt(i));
+            addPrevious(esNumero, res);
+        }
+   
+        
+       
+    }
+
+public void addPrevious(boolean esNumero, String numero){
+    if(numero.equals(".")||numero.equals("0")||numero.equals("1")||numero.equals("2")||numero.equals("3")||numero.equals("4")||numero.equals("5")||numero.equals("6")||numero.equals("7")||numero.equals("8")||numero.equals("9")){
+        this.temp += numero;
+    }
+    else {
+        this.remaining.add(this.temp);
+        this.temp = "";
+        
+        this.remaining.add(numero);
+}
+}
+
+public double sumNumber(double number1, double number2){
     return (number1+number2);
 }
 
-public int minusNumber(int number1, int number2){
+public double minusNumber(double number1, double number2){
     
     return (number1 - number2);
 }
 
-public int multiNumber(int number1, int number2){
+public double multiNumber(double number1, double number2){
     return (number1*number2);
 }
 
-public int divNumber(int number1, int number2){
-    int resultado = 0;
+public double divNumber(double number1, double number2){
+    double resultado = 0;
     
     if (number1 == 0 || number2 == 0){
         if (number1 == 0 && number2 != 0) resultado = number2;
@@ -749,9 +833,8 @@ public void setTheme(){
         this.BMult.setForeground(Color.black);
         this.BDiv.setForeground(Color.black);
         this.BEquals.setForeground(Color.black);
-        this.BAC.setForeground(Color.black);
-        this.BDel.setForeground(Color.black);
-        this.BTheme.setForeground(Color.black);
+        this.B10.setForeground(Color.black);
+        this.BTheme.setForeground(Color.white);
         
         // Set button background to white
         this.B0.setBackground(Color.white);
@@ -764,8 +847,9 @@ public void setTheme(){
         this.B7.setBackground(Color.white);
         this.B8.setBackground(Color.white);
         this.B9.setBackground(Color.white);
+        this.B10.setBackground(Color.white);
         this.BEquals.setBackground(Color.white);
-        this.BTheme.setBackground(Color.white);
+        this.BTheme.setBackground(Color.black);
         
         // Disable dark mode
         this.isDark = false;
@@ -789,8 +873,9 @@ public void setTheme(){
         this.B7.setBackground(Color.gray);
         this.B8.setBackground(Color.gray);
         this.B9.setBackground(Color.gray);
+        this.B10.setBackground(Color.gray);
         this.BEquals.setBackground(Color.gray);
-        this.BTheme.setBackground(Color.gray);
+        this.BTheme.setBackground(Color.white);
         
         // Set button font color to white
         this.B0.setForeground(Color.white);
@@ -808,9 +893,8 @@ public void setTheme(){
         this.BMult.setForeground(Color.white);
         this.BDiv.setForeground(Color.white);
         this.BEquals.setForeground(Color.white);
-        this.BAC.setForeground(Color.white);
-        this.BDel.setForeground(Color.white);
-        this.BTheme.setForeground(Color.white);
+        this.B10.setForeground(Color.white);
+        this.BTheme.setForeground(Color.black);
         
         // Enable dark mode
         this.isDark = true;

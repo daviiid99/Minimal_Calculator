@@ -581,16 +581,18 @@ public class Main extends javax.swing.JFrame {
 
 public void typeNumber(javax.swing.JButton button){
     
-    boolean esEntero = false;
-    
+    boolean esEntero = false;    
     
     for (int i = 0; i < this.numbers.length; i++){
         if (this.numbers[i].equals(button.getText())){
             esEntero = true;
         }
+        
+        
     }
     
     if (esEntero){
+        this.isPreviousSymbol = false;
         addNumberToPreview(button);
         this.temp += button.getText();
         this.previousSymbol = "";
@@ -598,8 +600,11 @@ public void typeNumber(javax.swing.JButton button){
     }
     
     else {
-        this.remaining.add(this.temp);
-        this.temp = "";
+        if (!this.temp.equals("")){
+            this.remaining.add(this.temp);
+            this.temp = "";
+            
+        } 
         
         if(button.getText().equals("x")){
             this.temp = "x";
@@ -608,9 +613,9 @@ public void typeNumber(javax.swing.JButton button){
             if (isPreviousSymbol){
                 this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
                 this.remaining.set(this.remaining.size() -1 , this.temp);
-                this.previousSymbol = "";
-            } else{
+                this.previousSymbol = "x";
                 
+            } else{
                 this.remaining.add(this.temp);
                 this.previousSymbol = "x";
                 addNumberToPreview(button);
@@ -624,9 +629,9 @@ public void typeNumber(javax.swing.JButton button){
             //checkPreviousEntry();
             
             if (this.isPreviousSymbol){
-                this.preview.setText(this.preview.getText().length() - 1 + "+" );
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length())));
                 this.remaining.set(this.remaining.size() - 1, "+");
-                this.previousSymbol = "";
+                this.previousSymbol = "+";
             } else{
                 
                 this.remaining.add(this.temp);
@@ -643,8 +648,9 @@ public void typeNumber(javax.swing.JButton button){
             //checkPreviousEntry();
             
             if (this.isPreviousSymbol){
-                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length())));
                 this.remaining.set(this.remaining.size() -1 , "-");
+                this.previousSymbol = "-";
             } else{
                 
                 this.remaining.add(this.temp);
@@ -660,8 +666,9 @@ public void typeNumber(javax.swing.JButton button){
             //checkPreviousEntry();
             
             if (this.isPreviousSymbol){
-                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length() - 1)));
+                this.preview.setText(this.preview.getText().substring(0, (this.preview.getText().length())));
                 this.remaining.set(this.remaining.size() - 1, "÷");
+                this.previousSymbol = "÷";
             } else{
                 
                 this.remaining.add(this.temp);
@@ -713,6 +720,7 @@ public void typeNumber(javax.swing.JButton button){
         }
         
         if(button.getText().equals("=")){
+            this.remaining.add(this.temp);
             this.temp = "";
             readInput() ;
         }
@@ -728,7 +736,7 @@ public void checkPreviousEntry(){
     if (this.previousSymbol.equals("+")|| this.previousSymbol.equals("-") || this.previousSymbol.equals("x") || this.previousSymbol.equals("÷") ){
         this.isPreviousSymbol = true;
 
-    } else{
+    } else {
         this.isPreviousSymbol = false;
     }
 }
@@ -748,11 +756,53 @@ public void readInput(){
             if (this.remaining.get(i).equals(this.symbols[j])){
                 if(result == 0){
                     if(this.remaining.get(i).equals("+")) {
-                        result = sumNumber(Double.valueOf(this.remaining.get(i - 1)), Double.valueOf(this.remaining.get(i + 1)) );
-                        this.preview.setText(String.valueOf(result));
+                       if(this.remaining.get(0).equals("+") && this.remaining.get(2).equals("+")){
+                           
+                           result = sumNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
+                           this.preview.setText(String.valueOf(result));
+                           i = 3;
+                           this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
+                            
+                        } 
+                       
+                       if (this.remaining.get(0).equals("+") && this.remaining.get(2).equals("-")){
+                           
+                           result = minusNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
+                           this.preview.setText(String.valueOf(result));
+                           i = 3;
+                           this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
+                            
+                       }
+                       
+                       if (this.remaining.get(1).equals("+")){
+                            result = sumNumber(Double.valueOf(this.remaining.get(i - 1)), Double.valueOf(this.remaining.get(i + 1)) );
+                            this.preview.setText(String.valueOf(result));
+                        }
+                    
                     } else if (this.remaining.get(i).equals("-")){
-                        result = minusNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
-                        this.preview.setText(String.valueOf(result));
+                        if(this.remaining.get(0).equals("-") && this.remaining.get(2).equals("-")){
+                            result = sumNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
+                            this.preview.setText(String.valueOf(result));
+                            i = 3;
+                            this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
+                            
+                        }
+                        
+                        if(this.remaining.get(0).equals("-") && this.remaining.get(2).equals("+")){
+                            result = minusNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
+                            this.preview.setText(String.valueOf(result));
+                            i = 3;
+                            this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
+                            
+                        }
+                        
+                        
+                        if (this.remaining.get(1).equals("-")) {
+                            result = minusNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );
+                            this.preview.setText(String.valueOf(result));
+                            
+                        }
+                        
                         
                     } else if (this.remaining.get(i).equals("x")){
                         result = multiNumber(Double.valueOf(this.remaining.get(i - 1)),Double.valueOf(this.remaining.get(i + 1)) );

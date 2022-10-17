@@ -767,9 +767,12 @@ public void readInput(){
                         } 
                        
                        if (this.remaining.get(0).equals("+") && this.remaining.get(2).equals("-")){
-                           
                            result = minusNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
-                           this.preview.setText(String.valueOf(result));
+                           if (result < 0) this.preview.setText(String.valueOf(result)) ;
+                           else {
+                               this.preview.setText(String.valueOf(result));
+                           }
+                           
                            i = 3;
                            this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
                             
@@ -783,7 +786,10 @@ public void readInput(){
                     } else if (this.remaining.get(i).equals("-")){
                         if(this.remaining.get(0).equals("-") && this.remaining.get(2).equals("-")){
                             result = sumNumber(Double.valueOf(this.remaining.get(1)), Double.valueOf(this.remaining.get(3)));
-                            this.preview.setText(String.valueOf(result));
+                            this.preview.setText(String.valueOf(result));if (result < 0) this.preview.setText("-" + String.valueOf(result)) ;
+                           else {
+                               this.preview.setText(String.valueOf(result));
+                           }
                             i = 3;
                             this.previous_operation = this.remaining.get(0) + this.remaining.get(1) + this.remaining.get(2) + this.remaining.get(3);
                             

@@ -18,6 +18,7 @@ public class Main extends javax.swing.JFrame {
     String[] symbols = {"x","+", "-", "÷"};
     boolean isDark = false;
     boolean isPreviousSymbol = false;
+    boolean isBackup = false;
     String previousSymbol = "";
     ArrayList<Integer> results  = new ArrayList<Integer>();
     ArrayList<String> remaining  = new ArrayList<String>();
@@ -715,7 +716,8 @@ public void typeNumber(javax.swing.JButton button){
             this.Previous.setText("");
             this.previous_operation = "";
             this.remaining = new ArrayList<String>();
-            this.temp = "";  
+            this.temp = "";
+            isBackup = true;
             recoverPrevious();
         }
         
@@ -751,7 +753,6 @@ public void readInput(){
     for (int i = 0; i < this.remaining.size(); i++){
         this.previous_operation += this.remaining.get(i);
         for(int j = 0; j < this.symbols.length; j++){
-            
             
             if (this.remaining.get(i).equals(this.symbols[j])){
                 if(result == 0){
@@ -879,12 +880,17 @@ public void recoverPrevious(){
     }
 
 public void addPrevious(boolean esNumero, String numero){
+    
     if(numero.equals(".")||numero.equals("0")||numero.equals("1")||numero.equals("2")||numero.equals("3")||numero.equals("4")||numero.equals("5")||numero.equals("6")||numero.equals("7")||numero.equals("8")||numero.equals("9")){
         this.temp += numero;
     }
+    
+    
     else {
-        this.remaining.add(this.temp);
-        this.temp = "";
+        if(this.temp.length() > 0){
+            this.remaining.add(this.temp);
+            this.temp = "";
+        }
         
         this.remaining.add(numero);
 }
